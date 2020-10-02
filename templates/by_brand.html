@@ -1,0 +1,10 @@
+<html>
+    <body>        
+        <h2>Cars by {{brand}}:</h2>        
+
+        {% for car in cars %}
+        <p>{{car.brand}} {{car.model}} was made in {{car.origin}} in {{car.model_year}}</p>
+        {% endfor %}
+        
+    </body>
+</html>

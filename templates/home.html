@@ -1,0 +1,14 @@
+<html>
+    <body>        
+        <h2>Cars:</h2>
+        <form action='/by_brand'>
+            <select name="brand">
+              {% for b in brands %}
+              <option value="{{ b }}">{{ b }}</option>
+              {% endfor %}
+            </select>
+            <input type="submit">
+          </form>
+
+    </body>
+</html>
