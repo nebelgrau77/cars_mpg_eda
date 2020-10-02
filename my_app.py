@@ -34,19 +34,21 @@ class Car(db.Model):
 def home():
 
     brands = db.session.query(Car.brand.distinct()).all()
-    brands = [brand[0] for brand in brands]
+    brands = sorted([brand[0] for brand in brands])
     return render_template('home.html', brands = brands)
 
 @app.route('/by_brand/')
 def by_brand():
-    brand = request.args.get('brand')
+    brand = request.args.get('brand')    
     
-    
-    avg = db.session.query(func.avg(Car.weight_kg)).filter(Car.brand == brand).scalar()
+    avg_weight = db.session.query(func.avg(Car.weight_kg)).filter(Car.brand == brand).scalar()
+    avg_horsepower = db.session.query(func.avg(Car.horsepower)).filter(Car.brand == brand).scalar()
+    avg_consumption = db.session.query(func.avg(Car.liters_per_100km)).filter(Car.brand == brand).scalar()
+    count = db.session.query(func.count(Car.index)).filter(Car.brand == brand).scalar()
 
     cars = db.session.query(Car).filter(Car.brand == brand).all()
-    heaviest = Car.query.filter_by(brand = brand).order_by(Car.weight_kg.desc()).first()
-    return render_template('by_brand.html', brand = brand, cars = cars, heavy = heaviest, avg = avg)
+    
+    return render_template('by_brand.html', brand = brand, cars = cars, avg_weight = avg_weight, avg_horsepower = avg_horsepower, avg_consumption = avg_consumption, count = count)
 
 
 '''

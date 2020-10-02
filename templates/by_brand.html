@@ -1,16 +1,25 @@
 <html>
     <body>        
-        <h2>Cars by {{brand}}:</h2>        
+        <h2>brand: {{brand}}</h2>        
 
-        <p>heaviest: {{heavy.brand}} {{heavy.model}} from {{heavy.model_year}} at {{heavy.weight_kg}}[kg]</p>
+        <p>{{count}} entries</p>    
+        <p>average weight: {{avg_weight | round(0, "common") | int}} kg</p>
+        <p>average power: {{avg_horsepower | round(0, "common") | int}} HP</p>
+        <p>average consumption: {{avg_consumption | round(1, "common")}} l/100 km</p>
 
-        <p>average weight: {{avg}}[kg]</p>
+        <br></br>
+
+        <form action="/">
+            <input type="submit" value="Back" />
+        </form>
 
         <br></br>
 
         {% for car in cars %}
-        <p>{{car.brand}} {{car.model}} was made in {{car.origin}} in {{car.model_year}}</p>
+        <p>{{car.brand}} {{car.model}}, origin: {{car.origin}}, year: {{car.model_year}}</p>
         {% endfor %}
         
+
+
     </body>
 </html>
