@@ -1,3 +1,7 @@
 notes.md
 requirements.txt
 env/
+__pycache__/
+.ipynb_checkpoints/
+my_database.db
+
