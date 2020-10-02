@@ -2,6 +2,12 @@
     <body>        
         <h2>Cars by {{brand}}:</h2>        
 
+        <p>heaviest: {{heavy.brand}} {{heavy.model}} from {{heavy.model_year}} at {{heavy.weight_kg}}[kg]</p>
+
+        <p>average weight: {{avg}}[kg]</p>
+
+        <br></br>
+
         {% for car in cars %}
         <p>{{car.brand}} {{car.model}} was made in {{car.origin}} in {{car.model_year}}</p>
         {% endfor %}

@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -31,8 +32,7 @@ class Car(db.Model):
 
 @app.route('/')
 def home():
-    #cars = Car.query.all()
-    
+
     brands = db.session.query(Car.brand.distinct()).all()
     brands = [brand[0] for brand in brands]
     return render_template('home.html', brands = brands)
@@ -40,8 +40,13 @@ def home():
 @app.route('/by_brand/')
 def by_brand():
     brand = request.args.get('brand')
-    cars = Car.query.filter_by(brand = brand).all()
-    return render_template('by_brand.html', brand = brand, cars = cars)
+    
+    
+    avg = db.session.query(func.avg(Car.weight_kg)).filter(Car.brand == brand).scalar()
+
+    cars = db.session.query(Car).filter(Car.brand == brand).all()
+    heaviest = Car.query.filter_by(brand = brand).order_by(Car.weight_kg.desc()).first()
+    return render_template('by_brand.html', brand = brand, cars = cars, heavy = heaviest, avg = avg)
 
 
 '''
