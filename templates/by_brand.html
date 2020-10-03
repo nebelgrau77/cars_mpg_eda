@@ -1,25 +1,31 @@
-<html>
-    <body>        
-        <h2>brand: {{brand}}</h2>        
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}homepage{% endblock %}
 
-        <p>{{count}} entries</p>    
-        <p>average weight: {{avg_weight | round(0, "common") | int}} kg</p>
-        <p>average power: {{avg_horsepower | round(0, "common") | int}} HP</p>
-        <p>average consumption: {{avg_consumption | round(1, "common")}} l/100 km</p>
+{% block content %}
+    
+    <div class="container">
 
-        <br></br>
+    <h4>brand: {{brand}}</h4>        
 
-        <form action="/">
-            <input type="submit" value="Back" />
-        </form>
+    <p>{{count}} entries</p>    
+    <p>average weight: {{avg_weight | round(0, "common") | int}} kg</p>
+    <p>average power: {{avg_horsepower | round(0, "common") | int}} HP</p>
+    <p>average consumption: {{avg_consumption | round(1, "common")}} l/100 km</p>
 
-        <br></br>
+    <div></div>
 
-        {% for car in cars %}
-        <p>{{car.brand}} {{car.model}}, origin: {{car.origin}}, year: {{car.model_year}}</p>
-        {% endfor %}
-        
+    <form action="/">
+        <input type="submit" value="Back" />
+    </form>
 
+    <div></div>
 
-    </body>
+    {% for car in cars %}
+    <p>{{car.brand}} {{car.model}}, origin: {{car.origin}}, year: {{car.model_year}}</p>
+    {% endfor %}
+    
+    </div>
+
+{% endblock %}    
 </html>

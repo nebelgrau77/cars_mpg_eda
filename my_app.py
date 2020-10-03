@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
 from sqlalchemy import func
 
 # define paths to project and database
@@ -10,6 +11,8 @@ database_file = 'sqlite:///{}'.format(os.path.join(project_dir, 'cars.db'))
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file # tell the app where the database is
+
+bootstrap = Bootstrap(app)
 
 db = SQLAlchemy(app) # initialize a connection to the database
 
