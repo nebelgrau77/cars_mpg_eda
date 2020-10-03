@@ -36,11 +36,15 @@ class Car(db.Model):
 @app.route('/')
 def home():
 
+    return render_template('home.html')
+
+@app.route('/select_brand/')
+def select_brand():
     brands = db.session.query(Car.brand.distinct()).all()
     brands = sorted([brand[0] for brand in brands])
-    return render_template('home.html', brands = brands)
+    return render_template('select_brand.html', brands = brands)
 
-@app.route('/by_brand/')
+@app.route('/select_brand/display/')
 def by_brand():
     brand = request.args.get('brand')    
     
@@ -53,35 +57,14 @@ def by_brand():
     
     return render_template('by_brand.html', brand = brand, cars = cars, avg_weight = avg_weight, avg_horsepower = avg_horsepower, avg_consumption = avg_consumption, count = count)
 
+@app.route('/select_year/')
+def select_year():
+    years = db.session.query(Car.model_year.distinct()).all()
+    years = sorted([year[0] for year in years])
+    return render_template('select_year.html', years = years)
 
-'''
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    if request.form:
-        kit = Kit(name = request.form.get("name"), manufacturer = request.form.get("manufacturer"), scale = int(request.form.get("scale")))
-        db.session.add(kit)
-        db.session.commit()
-    kits = Kit.query.all()
-    return render_template('home.html', kits = kits)
-
-@app.route('/update', methods=["POST"])
-def update():
-    newname = request.form.get("newname")
-    oldname = request.form.get("oldname")
-    newmanufacturer = request.form.get("newmanufacturer")
-    newscale = request.form.get("newscale")
-    kit = Kit.query.filter_by(name = oldname).first()
-    kit.name = newname
-    kit.manufacturer = newmanufacturer
-    kit.scale = int(newscale)
-    db.session.commit()
-    return redirect('/')
-
-@app.route('/delete', methods = ["POST"])
-def delete():
-    name = request.form.get("name")
-    kit = Kit.query.filter_by(name=name).first()
-    db.session.delete(kit)
-    db.session.commit()
-    return redirect('/')
-'''
+@app.route('/select_year/display')
+def by_year():
+    year = request.args.get('year')
+    avg_HP = db.session.query(func.avg(Car.horsepower)).filter(Car.model_year == year).scalar()
+    return render_template('by_year.html', year = year, avg_HP = avg_HP)

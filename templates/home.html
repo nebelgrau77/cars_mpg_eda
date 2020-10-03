@@ -8,19 +8,6 @@
     <h3>"Cars MPG" dataset dashboard</h3>
 </div>
 
-
-
-<h4>select a brand:</h4>
-
-<form action='/by_brand'>
-  <select name="brand">
-    {% for b in brands %}
-    <option value="{{ b }}">{{ b }}</option>
-    {% endfor %}
-  </select>
-  <input type="submit">
-</form>
-
 </div>
 {% endblock %}
 
