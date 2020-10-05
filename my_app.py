@@ -5,6 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from sqlalchemy import func
 
+from make_chart import make_chart
+
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = 'sqlite:///{}'.format(os.path.join(project_dir, 'cars.db'))
@@ -42,11 +44,13 @@ def home():
 def select_brand():
     brands = db.session.query(Car.brand.distinct()).all()
     brands = sorted([brand[0] for brand in brands])
+    
     return render_template('select_brand.html', brands = brands)
 
-@app.route('/select_brand/display/')
+@app.route('/select_brand/display')
 def by_brand():
-    brand = request.args.get('brand')    
+    
+    brand = request.args.get('brand')
     
     avg_weight = db.session.query(func.avg(Car.weight_kg)).filter(Car.brand == brand).scalar()
     avg_horsepower = db.session.query(func.avg(Car.horsepower)).filter(Car.brand == brand).scalar()
@@ -66,5 +70,25 @@ def select_year():
 @app.route('/select_year/display')
 def by_year():
     year = request.args.get('year')
+
     avg_HP = db.session.query(func.avg(Car.horsepower)).filter(Car.model_year == year).scalar()
     return render_template('by_year.html', year = year, avg_HP = avg_HP)
+
+@app.route('/test_chart')
+def test_chart():       
+    
+    #myquery = db.session.query(Car.model_year, func.avg(Car.weight_kg)).group_by(Car.model_year).all() # initial query
+
+    val = request.args.get('val')
+   
+    queries = {'weight': Car.weight_kg, 'horsepower': Car.horsepower}
+
+    myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
+
+    years = [item[0] for item in myquery]
+    values = [item[1] for item in myquery]
+    chart = make_chart(years, values, val)
+
+    content = 'some text here'
+
+    return render_template('test_chart.html', vals = queries.keys(), chart = chart , content = myquery)

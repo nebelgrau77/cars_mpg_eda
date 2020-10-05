@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}homepage{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class = "page-header">
+    <h3>"Cars MPG" dataset dashboard</h3>
+</div>
+
+<h4>select year:</h4>
+
+<form action='/select_year/display'>
+  <select name="year">
+    {% for y in years %}
+    <option value="{{ y }}">{{ y }}</option>
+    {% endfor %}
+  </select>
+  <input type="submit">
+</form>
+
+</div>
+{% endblock %}
+
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}homepage{% endblock %}
+
+{% block content %}
+    
+    <div class="container">
+
+    <h4>year: {{year}}</h4>        
+    
+    <p>average power: {{avg_HP | round(0, "common") | int}} HP</p>
+
+
+    <div></div>
+
+    <form action="/select_year">
+        <input type="submit" value="Back" />
+    </form>
+
+    <div></div>
+
+    
+    </div>
+
+{% endblock %}    
+</html>

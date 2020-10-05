@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}homepage{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class = "page-header">
+    <h3>"Cars MPG" dataset dashboard</h3>
+</div>
+
+<h4>select a brand:</h4>
+
+<form action='/select_brand/display'>
+  <select name="brand">
+    {% for b in brands %}
+    <option value="{{ b }}">{{ b }}</option>
+    {% endfor %}
+  </select>
+  <input type="submit">
+</form>
+
+</div>
+{% endblock %}
+
+</html>
