@@ -57,9 +57,7 @@ def by_brand():
     avg_consumption = db.session.query(func.avg(Car.liters_per_100km)).filter(Car.brand == brand).scalar()
     count = db.session.query(func.count(Car.index)).filter(Car.brand == brand).scalar()
 
-    cars = db.session.query(Car).filter(Car.brand == brand).all()
-    
-    return render_template('by_brand.html', brand = brand, cars = cars, avg_weight = avg_weight, avg_horsepower = avg_horsepower, avg_consumption = avg_consumption, count = count)
+    return render_template('by_brand.html', brand = brand, avg_weight = avg_weight, avg_horsepower = avg_horsepower, avg_consumption = avg_consumption, count = count)
 
 @app.route('/select_year/')
 def select_year():
@@ -77,8 +75,6 @@ def by_year():
 @app.route('/test_chart')
 def test_chart():       
     
-    #myquery = db.session.query(Car.model_year, func.avg(Car.weight_kg)).group_by(Car.model_year).all() # initial query
-
     val = request.args.get('val')
    
     queries = {'weight': Car.weight_kg, 'horsepower': Car.horsepower}
@@ -89,6 +85,4 @@ def test_chart():
     values = [item[1] for item in myquery]
     chart = make_chart(years, values, val)
 
-    content = 'some text here'
-
-    return render_template('test_chart.html', vals = queries.keys(), chart = chart , content = myquery)
+    return render_template('test_chart.html', vals = queries.keys(), chart = chart)

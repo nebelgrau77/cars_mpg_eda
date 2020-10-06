@@ -4,8 +4,8 @@ import base64
 
 def make_chart(x, y, param):
  
-    fig, ax = plt.subplots(figsize = (8,6))
-    ax.bar(x, y)
+    fig, ax = plt.subplots(figsize = (10,6))
+    ax.bar(x, y, color = '#3C99DC')
     ax.set_title('average {}'.format(param))
     img = io.BytesIO()
     fig.savefig(img, format = 'png')
