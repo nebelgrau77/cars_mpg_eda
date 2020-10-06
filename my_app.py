@@ -80,11 +80,13 @@ def test_chart():
 	val = request.args.get('val') # value chosen by the user
    
 	queries = {'weight': Car.weight_kg, 'horsepower': Car.horsepower} # possible values 
+	units = {'weight': 'kg', 'horsepower': 'HP'} # units (TO DO: make queries and units into a single dictionary with tuples)
 
 	myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
 
 	years = [item[0] for item in myquery]
 	values = [item[1] for item in myquery]
-	chart = make_chart(years, values, val)
+	unit = 'kg'
+	chart = make_chart(years, values, val, unit)
 
 	return render_template('test_chart.html', vals = queries.keys(), chart = chart)

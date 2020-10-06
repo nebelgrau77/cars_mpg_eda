@@ -4,22 +4,25 @@
 
 {% block content %}
     
-    <div class="container">
+<div class="container">
 
-    <h4>year: {{year}}</h4>        
-    
-    <p>average power: {{avg_HP | round(0, "common") | int}} HP</p>
+	<div class = "page-header">
+		<h3>"Cars MPG" dataset dashboard</h3>
+	</div>
+
+    <h4>Year: {{year}}</h4>        
+    	
+    <p>Average horsepower: {{avg_HP | round(0, "common") | int}} HP</p>
 
     <div></div>
 
+	<br></br>
+	
     <form action="/select_year">
         <input type="submit" value="Back" />
     </form>
-
-    <div></div>
-
     
-    </div>
+</div>
 
 {% endblock %}    
 </html>

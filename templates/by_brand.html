@@ -4,17 +4,19 @@
 
 {% block content %}
     
-    <div class="container">
+<div class="container">
+	<div class = "page-header">
+		<h3>"Cars MPG" dataset dashboard</h3>
+	</div>
 
-
-    <h4>brand: {{brand}}</h4>        
-
-    <p>{{count}} entries</p>    
-    <p>average weight: {{avg_weight | round(0, "common") | int}} kg</p>
-    <p>average power: {{avg_horsepower | round(0, "common") | int}} HP</p>
-    <p>average consumption: {{avg_consumption | round(1, "common")}} l/100 km</p>
-
-    <div></div>
+    <h4>Brand: {{brand}}</h4>        
+	
+	<p>Cars in the database: {{count}}</p>    
+    <p>Average weight: {{avg_weight | round(0, "common") | int}} kg</p>
+    <p>Average power: {{avg_horsepower | round(0, "common") | int}} HP</p>
+    <p>Average consumption: {{avg_consumption | round(1, "common")}} l/100 km</p>
+    
+	<br></br>
 
     <form action="/select_brand">
         <input type="submit" value="Back" />
