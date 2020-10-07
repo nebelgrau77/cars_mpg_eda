@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from sqlalchemy import func
 
-from make_chart import make_chart
+from make_chart import simple_chart, multi_chart
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -73,7 +73,7 @@ def by_year():
 	avg_HP = db.session.query(func.avg(Car.horsepower)).filter(Car.model_year == year).scalar()
 	return render_template('by_year.html', year = year, avg_HP = avg_HP)
 
-@app.route('/test_chart')
+@app.route('/simple_chart')
 def test_chart():       
 	'''generate a chart with data retrieved from the database'''
 	
@@ -87,6 +87,24 @@ def test_chart():
 	years = [item[0] for item in myquery]
 	values = [item[1] for item in myquery]
 	unit = 'kg'
-	chart = make_chart(years, values, val, unit)
+	chart = simple_chart(years, values, val, unit)
 
 	return render_template('test_chart.html', vals = queries.keys(), chart = chart)
+
+@app.route('/multi_chart')
+def better_chart():       
+	'''generate a chart with data retrieved from the database'''
+	
+	val = request.args.get('val') # value chosen by the user
+   
+	queries = {'weight': Car.weight_kg, 'horsepower': Car.horsepower} # possible values 
+	units = {'weight': 'kg', 'horsepower': 'HP'} # units (TO DO: make queries and units into a single dictionary with tuples)
+
+	myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
+
+	years = [item[0] for item in myquery]
+	values = [item[1] for item in myquery]
+	unit = 'kg'
+	chart = multi_chart(years, values, val, unit)
+
+	return render_template('multi_chart.html', vals = queries.keys(), chart = chart)
