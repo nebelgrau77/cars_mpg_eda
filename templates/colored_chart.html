@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+{% block title %}homepage{% endblock %}
+
+{% block content %}
+    
+<div class="container">
+
+	<div class = "page-header">
+		<h3>"Cars MPG" dataset dashboard</h3>
+	</div>
+
+    <form action='/color_chart'>
+        <select name="param1">
+            {% for v in vals %}
+                <option value="{{ v }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+    
+        <select name="param2">
+            {% for v in vals %}
+                <option value="{{ v }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="size">
+            {% for s in size_vals %}
+                <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="submit">
+
+    </form>
+
+
+
+    
+    <img src = '{{ chart }}' class ="img-responsive"></img>
+
+</div>
+
+{% endblock %}    
+</html>
