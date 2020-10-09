@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from sqlalchemy import func
 
-from make_chart import simple_chart, multi_chart
+from make_chart import simple_chart, multi_chart, colored_chart, better_colored_chart
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -95,16 +95,82 @@ def test_chart():
 def better_chart():       
 	'''generate a chart with data retrieved from the database'''
 	
-	val = request.args.get('val') # value chosen by the user
-   
-	queries = {'weight': Car.weight_kg, 'horsepower': Car.horsepower} # possible values 
-	units = {'weight': 'kg', 'horsepower': 'HP'} # units (TO DO: make queries and units into a single dictionary with tuples)
+	param1 = request.args.get('param1') # value chosen by the user
+	param2 = request.args.get('param2') # value chosen by the user
+	size = request.args.get('size') # value chosen by the user
+		
+	category = 'origin'
 
-	myquery = db.session.query(Car.model_year, func.avg(queries.get(val, Car.weight_kg))).group_by(Car.model_year).all()
+	queries = {'weight': Car.weight_kg, 'horsepower': Car.horsepower, 'acceleration': Car.acceleration, 'consumption': Car.liters_per_100km} # possible values 
+	units = {'weight': 'kg', 'horsepower': 'HP', 'acceleration': 's', 'consumption': 'l/100km'} # units (TO DO: make queries and units into a single dictionary with tuples)
 
-	years = [item[0] for item in myquery]
-	values = [item[1] for item in myquery]
-	unit = 'kg'
-	chart = multi_chart(years, values, val, unit)
+	categories = {'origin':Car.origin, 'cylinders': Car.cylinders}
+	
+	myquery = db.session.query(queries.get(param1, Car.horsepower), 
+								queries.get(param2, Car.weight_kg),
+								queries.get(size, Car.liters_per_100km),
+								categories.get(category, Car.origin)).all()
+
+	xvalues = [item[0] for item in myquery]
+	yvalues = [item[1] for item in myquery]
+	size = [item[2] for item in myquery]
+	category = [item[3] for item in myquery]
+	
+	unit1 = units.get(param1, "horsepower")
+	unit2 = units.get(param2, "weight")
+	chart = multi_chart(xvalues, yvalues, param1, param2, size, category, unit1, unit2)
 
 	return render_template('multi_chart.html', vals = queries.keys(), chart = chart)
+
+
+@app.route('/color_chart')
+def colorchart():
+
+	categories = ['AMERICA', 'EUROPE', 'ASIA']
+
+	queries = []
+
+	params = {'weight': Car.weight_kg, 'horsepower': Car.horsepower, 'acceleration': Car.acceleration, 'consumption': Car.liters_per_100km}
+	units = {'weight': 'kg', 'horsepower': 'HP', 'acceleration': 's', 'consumption': 'l/100km'} # units (TO DO: make queries and units into a single dictionary with tuples)
+
+	param1 = request.args.get('param1') # value chosen by the user
+	param2 = request.args.get('param2') # value chosen by the user
+	size = request.args.get('size') # value chosen by the user
+
+	for cat in categories:
+		myquery = db.session.query(params.get(param1, Car.weight_kg), params.get(param2, Car.liters_per_100km), params.get(size, Car.horsepower)).filter(Car.origin==cat).all()
+		queries.append(myquery)
+	
+	chart_params = [param1, param2, size]
+	chart_units = [units[param1], units[param2], units[size]]
+
+	chart = colored_chart(queries, categories, chart_params, chart_units)
+
+	size_vals = list(params.keys())
+	size_vals = size_vals.remove('horsepower')
+
+	return render_template('colored_chart.html', chart = chart, vals = params.keys(), size_vals = params.keys())
+
+@app.route('/better_color_chart')
+def bettercolorchart():
+
+	categories = ['AMERICA', 'EUROPE', 'ASIA']
+
+	params = {'weight': Car.weight_kg, 'horsepower': Car.horsepower, 'acceleration': Car.acceleration, 'consumption': Car.liters_per_100km}
+	units = {'weight': 'kg', 'horsepower': 'HP', 'acceleration': 's', 'consumption': 'l/100km'} # units (TO DO: make queries and units into a single dictionary with tuples)
+
+	param1 = request.args.get('param1') # value chosen by the user
+	param2 = request.args.get('param2') # value chosen by the user
+	size = request.args.get('size') # value chosen by the user
+
+	myquery = db.session.query(params.get(param1, Car.weight_kg), params.get(param2, Car.liters_per_100km), params.get(size, Car.horsepower), Car.origin).all()
+	
+	#chart_params = [param1, param2, size]
+	#chart_units = [units[param1], units[param2], units[size]]
+
+	chart = better_colored_chart(myquery)
+
+	#size_vals = list(params.keys())
+	#size_vals = size_vals.remove('horsepower')
+
+	return render_template('better_colored_chart.html', chart = chart)
