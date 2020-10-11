@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 from sqlalchemy import func
 
 from make_chart import simple_chart, multi_chart, colored_chart, better_colored_chart
-from make_bokeh_chart import simple_bokeh_chart
+from make_bokeh_chart import simple_bokeh_chart, better_bokeh_chart
 
 # define paths to project and database
 project_dir = os.path.dirname(os.path.abspath(__file__))
@@ -183,5 +183,19 @@ def bokehtest():
 
 	return render_template('bokeh_test.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources,)
 
+@app.route('/bokeh_better')
+def bokehbetter():
 
+
+	myquery = db.session.query(Car.weight_kg, 
+							Car.liters_per_100km, 
+							Car.horsepower, 
+							Car.origin, 
+							Car.brand, 
+							Car.model, 
+							Car.model_year).all()
+
+	script, div, js_resources, css_resources = better_bokeh_chart(myquery, 0.2, 'Cars fuel consumption')
+
+	return render_template('bokeh_better.html',plot_script = script,plot_div = div,js_resources = js_resources,css_resources=css_resources)
 	
